@@ -1,0 +1,33 @@
+#!/bin/bash
+
+_blog()
+{
+    declare -A SUBCOMMANDS
+    declare -A OPTS
+
+    OPTS["complete"]="-h --help --name --shell"
+    OPTS["help"]="-h --help"
+    OPTS["blog-create"]="-h --help -f --format -c --column --max-width --variable --prefix"
+    OPTS["blog-delete"]="-h --help"
+    OPTS["blog-get"]="-h --help -f --format -c --column --max-width --variable --prefix"
+    OPTS["blog-get-definition"]="-h --help"
+    OPTS["blog-list"]="-h --help -f --format -c --column --max-width --quote"
+    OPTS["blog-update"]="-h --help -f --format -c --column --max-width --variable --prefix"
+    OPTS["blog-validate"]="-h --help -f --format -c --column --max-width --prefix"
+
+    COMMANDS="${!OPTS[*]}"
+    COMPREPLY=()
+
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    if [[ $cur =~ (\.|\~|\/).* ]] ; then
+        _filedir
+    elif [ $COMP_CWORD == "1" ] ; then
+        COMPREPLY=($(compgen -W "$COMMANDS" -- ${cur}))
+    elif [ $COMP_CWORD == "2" ] ; then
+        COMPREPLY=($(compgen -W "${OPTS[${prev}]}" -- ${cur}))
+    fi
+    return 0
+}
+complete -F _blog blog

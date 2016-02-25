@@ -1,0 +1,3 @@
+[console_scripts]
+blog = blogclient.shell:main
+
